@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Flask local configuration
+.env
+.flaskenv
+
+# Local SQLite databases and instance data
+*.db
+*.sqlite
+*.sqlite3
+instance/
+
+# Test and coverage output
+.pytest_cache/
+.coverage
+htmlcov/
