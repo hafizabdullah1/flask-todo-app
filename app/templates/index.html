@@ -6,7 +6,7 @@
     <!-- Form to Add a New Todo -->
     <section>
         <h3>Add New Task</h3>
-        <form action="{{ url_for('add_todo') }}" method="POST">
+        <form action="{{ url_for('todos.add_todo') }}" method="POST">
             <input type="text" name="title" placeholder="What needs to be done?" required>
             <button type="submit">Add Task</button>
         </form>
@@ -17,20 +17,20 @@
     <!-- Search Bar & Filters -->
     <section class="filters-section">
         <!-- Search Form -->
-        <form action="{{ url_for('home') }}" method="GET" class="search-form">
+        <form action="{{ url_for('todos.home') }}" method="GET" class="search-form">
             <input type="hidden" name="filter" value="{{ current_filter }}">
             <input type="text" name="q" value="{{ search_query }}" placeholder="Search tasks...">
             <button type="submit">Search</button>
             {% if search_query %}
-                <a href="{{ url_for('home', filter=current_filter) }}"><button type="button" class="btn-toggle">Clear</button></a>
+                <a href="{{ url_for('todos.home', filter=current_filter) }}"><button type="button" class="btn-toggle">Clear</button></a>
             {% endif %}
         </form>
 
         <!-- Filter Tabs -->
         <div class="filter-tabs">
-            <a href="{{ url_for('home', filter='all', q=search_query) }}" class="tab {% if current_filter == 'all' %}active{% endif %}">All</a>
-            <a href="{{ url_for('home', filter='pending', q=search_query) }}" class="tab {% if current_filter == 'pending' %}active{% endif %}">Pending</a>
-            <a href="{{ url_for('home', filter='completed', q=search_query) }}" class="tab {% if current_filter == 'completed' %}active{% endif %}">Completed</a>
+            <a href="{{ url_for('todos.home', filter='all', q=search_query) }}" class="tab {% if current_filter == 'all' %}active{% endif %}">All</a>
+            <a href="{{ url_for('todos.home', filter='pending', q=search_query) }}" class="tab {% if current_filter == 'pending' %}active{% endif %}">Pending</a>
+            <a href="{{ url_for('todos.home', filter='completed', q=search_query) }}" class="tab {% if current_filter == 'completed' %}active{% endif %}">Completed</a>
         </div>
     </section>
 
@@ -51,13 +51,13 @@
 
                         <!-- Action Buttons -->
                         <div class="actions">
-                            <a href="{{ url_for('toggle_todo', todo_id=todo.id) }}">
+                            <a href="{{ url_for('todos.toggle_todo', todo_id=todo.id) }}">
                                 <button type="button" class="btn-toggle">
                                     {% if todo.done %}Undo{% else %}Done{% endif %}
                                 </button>
                             </a>
 
-                            <a href="{{ url_for('delete_todo', todo_id=todo.id) }}">
+                            <a href="{{ url_for('todos.delete_todo', todo_id=todo.id) }}">
                                 <button type="button" class="btn-delete">Delete</button>
                             </a>
                         </div>
