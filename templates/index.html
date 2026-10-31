@@ -14,6 +14,26 @@
 
     <hr>
 
+    <!-- Search Bar & Filters -->
+    <section class="filters-section">
+        <!-- Search Form -->
+        <form action="{{ url_for('home') }}" method="GET" class="search-form">
+            <input type="hidden" name="filter" value="{{ current_filter }}">
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Search tasks...">
+            <button type="submit">Search</button>
+            {% if search_query %}
+                <a href="{{ url_for('home', filter=current_filter) }}"><button type="button" class="btn-toggle">Clear</button></a>
+            {% endif %}
+        </form>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <a href="{{ url_for('home', filter='all', q=search_query) }}" class="tab {% if current_filter == 'all' %}active{% endif %}">All</a>
+            <a href="{{ url_for('home', filter='pending', q=search_query) }}" class="tab {% if current_filter == 'pending' %}active{% endif %}">Pending</a>
+            <a href="{{ url_for('home', filter='completed', q=search_query) }}" class="tab {% if current_filter == 'completed' %}active{% endif %}">Completed</a>
+        </div>
+    </section>
+
     <!-- Display Todo List -->
     <section>
         <h3>Your Tasks</h3>
@@ -21,28 +41,31 @@
             <ul>
                 {% for todo in todos %}
                     <li>
-                        {% if todo.done %}
-                            <strike>{{ todo.title }}</strike> (Completed)
-                        {% else %}
-                            <span>{{ todo.title }}</span> (Pending)
-                        {% endif %}
+                        <span class="todo-text {% if todo.done %}done{% endif %}">
+                            {{ todo.title }}
+                        </span>
 
-                        <!-- Toggle Status Button -->
-                        <a href="{{ url_for('toggle_todo', todo_id=todo.id) }}">
-                            <button type="button">
-                                {% if todo.done %}Undo{% else %}Mark Done{% endif %}
-                            </button>
-                        </a>
+                        <span class="status-badge {% if todo.done %}completed{% else %}pending{% endif %}">
+                            {% if todo.done %}Completed{% else %}Pending{% endif %}
+                        </span>
 
-                        <!-- Delete Button -->
-                        <a href="{{ url_for('delete_todo', todo_id=todo.id) }}">
-                            <button type="button">Delete</button>
-                        </a>
+                        <!-- Action Buttons -->
+                        <div class="actions">
+                            <a href="{{ url_for('toggle_todo', todo_id=todo.id) }}">
+                                <button type="button" class="btn-toggle">
+                                    {% if todo.done %}Undo{% else %}Done{% endif %}
+                                </button>
+                            </a>
+
+                            <a href="{{ url_for('delete_todo', todo_id=todo.id) }}">
+                                <button type="button" class="btn-delete">Delete</button>
+                            </a>
+                        </div>
                     </li>
                 {% endfor %}
             </ul>
         {% else %}
-            <p>No tasks yet! Add one above.</p>
+            <p class="empty-state">No tasks yet! Add your first task above.</p>
         {% endif %}
     </section>
 {% endblock %}
