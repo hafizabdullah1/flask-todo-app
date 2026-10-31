@@ -9,7 +9,18 @@
 <body>
     <div class="container">
         <header>
-            <h1>My Flask Todo App</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h1 style="margin: 0; font-size: 1.5rem;">Flask Todo App</h1>
+                <nav style="display: flex; gap: 0.75rem; align-items: center;">
+                    {% if current_user.is_authenticated %}
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Hi, {{ current_user.username }}</span>
+                        <a href="{{ url_for('auth.logout') }}" style="color: var(--danger); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" style="color: var(--primary); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Login</a>
+                        <a href="{{ url_for('auth.register') }}" style="color: var(--primary); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Register</a>
+                    {% endif %}
+                </nav>
+            </div>
         </header>
 
         <!-- Flash Messages Display -->

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Todo App{% endblock %}
+
+{% block content %}
+<section>
+    <h3>Create an Account</h3>
+    <form action="{{ url_for('auth.register') }}" method="POST" style="flex-direction: column;">
+        <input type="text" name="username" placeholder="Username" required autocomplete="username">
+        <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
+        <button type="submit">Register</button>
+    </form>
+    <p style="font-size: 0.9rem; color: var(--text-muted); text-align: center;">
+        Already have an account? <a href="{{ url_for('auth.login') }}" style="color: var(--primary);">Login here</a>
+    </p>
+</section>
+{% endblock %}
+

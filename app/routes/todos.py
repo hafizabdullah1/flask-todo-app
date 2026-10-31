@@ -1,16 +1,19 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required, current_user
 from app.extensions import db
 from app.models import Todo
 
-# 1. Create the Blueprint named 'todos'
 todos_bp = Blueprint('todos', __name__)
 
+
 @todos_bp.route("/")
+@login_required
 def home():
     filter_by = request.args.get("filter", "all")
     search_query = request.args.get("q", "").strip()
 
-    query = Todo.query
+    # Query only tasks belonging to the currently logged in user
+    query = Todo.query.filter_by(user_id=current_user.id)
 
     if filter_by == "pending":
         query = query.filter_by(done=False)
@@ -25,11 +28,13 @@ def home():
 
 
 @todos_bp.route("/add", methods=["POST"])
+@login_required
 def add_todo():
     title = request.form.get("title")
 
     if title and title.strip():
-        new_todo = Todo(title=title.strip())
+        # Associate task with the current logged in user
+        new_todo = Todo(title=title.strip(), author=current_user)
         db.session.add(new_todo)
         db.session.commit()
         flash("Task added successfully!", "success")
@@ -40,8 +45,10 @@ def add_todo():
 
 
 @todos_bp.route("/toggle/<int:todo_id>")
+@login_required
 def toggle_todo(todo_id):
-    todo = Todo.query.get_or_404(todo_id)
+    # Ensure users can only modify their own tasks
+    todo = Todo.query.filter_by(id=todo_id, user_id=current_user.id).first_or_404()
     todo.done = not todo.done
     db.session.commit()
 
@@ -52,8 +59,10 @@ def toggle_todo(todo_id):
 
 
 @todos_bp.route("/delete/<int:todo_id>")
+@login_required
 def delete_todo(todo_id):
-    todo = Todo.query.get_or_404(todo_id)
+    # Ensure users can only delete their own tasks
+    todo = Todo.query.filter_by(id=todo_id, user_id=current_user.id).first_or_404()
     db.session.delete(todo)
     db.session.commit()
     flash("Task deleted successfully!", "warning")
